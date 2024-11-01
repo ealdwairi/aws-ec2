@@ -48,13 +48,14 @@ jobs:
         working-directory: .
 
       - name: Terraform Apply
-        run: terraform apply \
-          -var instanceName=${{ github.event.inputs.instanceName }} \
-          -var awsRegion=${{ github.event.inputs.awsRegion }} \
-          -var instanceType=${{ github.event.inputs.instanceType }} \
-          -var access_key=${{ secrets.AWS_ACCESS_KEY_ID }} \
-          -var secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-          -auto-approve
+        run: |
+          terraform apply \
+            -var instanceName=${{ github.event.inputs.instanceName }} \
+            -var awsRegion=${{ github.event.inputs.awsRegion }} \
+            -var instanceType=${{ github.event.inputs.instanceType }} \
+            -var access_key=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            -var secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            -auto-approve
         working-directory: .
 
   destroy_instance:
@@ -80,12 +81,13 @@ jobs:
         run: terraform fmt
         working-directory: .
 
-      - name: Terraform Apply
-        run: terraform destroy \
-          -var instanceName=${{ github.event.inputs.instanceName }} \
-          -var awsRegion=${{ github.event.inputs.awsRegion }} \
-          -var instanceType=${{ github.event.inputs.instanceType }} \
-          -var access_key=${{ secrets.AWS_ACCESS_KEY_ID }} \
-          -var secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-          -auto-approve
+      - name: Terraform Destroy
+        run: |
+          terraform destroy \
+            -var instanceName=${{ github.event.inputs.instanceName }} \
+            -var awsRegion=${{ github.event.inputs.awsRegion }} \
+            -var instanceType=${{ github.event.inputs.instanceType }} \
+            -var access_key=${{ secrets.AWS_ACCESS_KEY_ID }} \
+            -var secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+            -auto-approve
         working-directory: .
