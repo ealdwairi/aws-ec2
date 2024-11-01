@@ -133,7 +133,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: 'AKIAVE6DUOEDUEMAUHUW'
+          aws-secret-access-key: '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'
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: ${{ github.event.inputs.awsRegion || 'us-east-1' }}  # Explicit region parameter
+          aws-region: 'us-east-1'
