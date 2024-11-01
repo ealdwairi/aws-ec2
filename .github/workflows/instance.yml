@@ -110,6 +110,7 @@ on:
       awsRegion:
         description: 'AWS Region for the instance'
         required: true
+        default: 'us-east-1' 
       instanceType:
         description: 'AWS instance type'
         required: true
