@@ -108,8 +108,9 @@ on:
         description: 'Name of the AWS Instance'
         required: true
       awsRegion:
-        description: 'AWS Region for the instance'        
-        default: 'us-east-1' 
+        description: 'AWS Region for the instance'
+        required: false
+        default: 'us-east-1'  # Default value for awsRegion
       instanceType:
         description: 'AWS instance type'
         required: true
@@ -121,77 +122,18 @@ on:
 jobs:
   # Job for applying the EC2 instance
   apply_ec2:
-    # Use the latest Ubuntu runner
     runs-on: ubuntu-latest
     
-    # Execute this job only if the action input is "apply"
     if: ${{ github.event.inputs.action == 'apply' }}
-    
     steps:
-      # Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Configure AWS credentials using GitHub secrets
+      # Adding AWS keys with region explicitly specified
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-
-      # Initialize Terraform 
-      - name: Terraform Init
-        run: terraform init
-        working-directory: .
-
-      # Format Terraform code
-      - name: Terraform Format
-        run: terraform fmt
-        working-directory: .
-
-      # Validate the Terraform code
-      - name: Terraform Validate
-        run: terraform validate
-        working-directory: .
-
-      # Apply the Terraform plan to create resources
-      - name: Terraform Apply
-        run: terraform apply -var "instanceName=${{ github.event.inputs.instanceName }}" -var "awsRegion=us-east-1" -var "instanceType=${{ github.event.inputs.instanceType }}" -auto-approve
-        working-directory: .
-
-  # Job for destroying the EC2 instance
-  destroy_instance:
-    runs-on: ubuntu-latest
-    
-    # Execute this job only if the action input is "destroy"
-    if: ${{ github.event.inputs.action == 'destroy' }}
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Configure AWS credentials using GitHub secrets
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-         
-
-      # Initialize Terraform
-      - name: Terraform Init
-        run: terraform init
-        working-directory: .
-
-      # Format Terraform code
-      - name: Terraform Format
-        run: terraform fmt
-        working-directory: .
-
-      # Destroy all resources
-      - name: Terraform Destroy
-        run: terraform destroy -var "instanceName=${{ github.event.inputs.instanceName }}" -var "awsRegion=us-east-1" -auto-approve
-        working-directory: .
-
+          aws-region: ${{ github.event.inputs.awsRegion || 'us-east-1' }}  # Explicit region parameter
